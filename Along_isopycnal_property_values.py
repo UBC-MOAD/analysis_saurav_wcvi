@@ -41,7 +41,7 @@ x_wcvi_slice = np.arange(550,650)
 #t =12
 znew = np.arange(0,150,0.1)
 
-den = np.arange(25.,27.,0.25/8.)
+den = np.arange(23.,27.,0.25/8.)
 tol = 0.001
 
 
@@ -95,9 +95,9 @@ for t in np.arange(spic_time_iso.shape[0]):
     
                 spic_den[j,i] = spic_iso[i]
         
-            spic_spec_iso[iso,j,i] = spic_den[j,i]
+                spic_spec_iso[iso,j,i] = spic_den[j,i]
         
-        spic_time_iso[t,iso,j,i] = spic_spec_iso[iso,j,i]
+                spic_time_iso[t,iso,j,i] = spic_spec_iso[iso,j,i]
 
 
 
