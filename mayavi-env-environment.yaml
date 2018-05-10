@@ -1,0 +1,14 @@
+name: mayavi-env
+
+channels:
+- conda-forge
+- defaults
+
+dependencies:
+- python=3.6
+- mayavi
+- scipy
+- matplotlib
+- netCDF4
+- notebook
+
