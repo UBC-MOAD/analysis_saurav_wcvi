@@ -42,10 +42,10 @@ x_wcvi_slice = np.arange(550,650)
 
 
 #t =12
-znew = np.arange(0,150,0.1)
+znew = np.arange(0,250,0.05)
 
 den = np.arange(23.,27.,0.25/8.)
-tol = 0.001
+tol = 0.01
 
 
 #rho_new = np.empty((znew.shape[0],x_wcvi_slice.shape[0]))
@@ -130,7 +130,7 @@ for t in np.arange(spic_time_iso.shape[0]):
 
 print("Calculating the depths of the isopycnals (in July) for 3D plots")
 
-depth_rho_0 = np.zeros_like(sal_time_iso[...])
+depth_rho_0 = np.empty((sal_time_iso[...].shape[0],sal_time_iso.shape[1],rho_jul.shape[2],rho_jul.shape[3]))
 
 for t in np.arange(spic_time_iso.shape[0]):
     for iso in np.arange(den.shape[0]):
@@ -139,6 +139,8 @@ for t in np.arange(spic_time_iso.shape[0]):
                 if mbathy[j,i] > 0:
                     depth_rho_0[t,iso,j, i] = np.interp(den[iso], rho_jul[t,:mbathy[j, i], j, i]-1000, zlevels[:mbathy[j, i]])
 
+depth_rho = np.empty_like(sal_time_iso[...])
+depth_rho = depth_rho_0[:,:,y_wcvi_slice,x_wcvi_slice]
 
 #for den in np.arange(dens_cont.shape[0]):
 #    for t in np.arange(rho_jul.shape[0]):
@@ -239,7 +241,7 @@ zdepth_of_isopycnal = bdy_file.createVariable('Depth of Isopycnal', 'float32', (
 spiciness[...]           = spic_time_iso[...];
 temperature[...]         = temp_time_iso[...];
 salinity[...]            = sal_time_iso[...];
-zdepth_of_isopycnal[...] = depth_rho_0[...]
+zdepth_of_isopycnal[...] = depth_rho[...]
 #density[...]   = rho_iso[...];
 isot[...] = den[:];
 x[...] = x_wcvi_slice[:];
@@ -323,7 +325,7 @@ for t in np.arange(spic_time_iso.shape[0]):
 
 print("Calculating the depths of the isopycnals (in August) for 3D plots")
 
-depth_rho_0 = np.zeros_like(sal_time_iso[...])
+depth_rho_0 = np.empty((sal_time_iso[...].shape[0],sal_time_iso.shape[1],rho_jul.shape[2],rho_jul.shape[3]))
 
 for t in np.arange(spic_time_iso.shape[0]):
     for iso in np.arange(den.shape[0]):
@@ -332,7 +334,8 @@ for t in np.arange(spic_time_iso.shape[0]):
                 if mbathy[j,i] > 0:
                     depth_rho_0[t,iso,j, i] = np.interp(den[iso], rho_aug[t,:mbathy[j, i], j, i]-1000, zlevels[:mbathy[j, i]])
 
-                    
+depth_rho = np.empty_like(sal_time_iso[...])
+depth_rho = depth_rho_0[:,:,y_wcvi_slice,x_wcvi_slice]                    
                     
 print("Writing the isopycnal data for August")                
                     
@@ -376,7 +379,7 @@ zdepth_of_isopycnal = bdy_file.createVariable('Depth of Isopycnal', 'float32', (
 spiciness[...]           = spic_time_iso[...];
 temperature[...]         = temp_time_iso[...];
 salinity[...]            = sal_time_iso[...];
-zdepth_of_isopycnal[...] = depth_rho_0[...]
+zdepth_of_isopycnal[...] = depth_rho[...]
 #density[...]   = rho_iso[...];
 isot[...] = den[:];
 x[...] = x_wcvi_slice[:];
