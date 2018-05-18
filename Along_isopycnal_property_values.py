@@ -44,7 +44,7 @@ x_wcvi_slice = np.arange(550,650)
 #t =12
 znew = np.arange(0,250,0.05)
 
-den = np.arange(23.,27.,0.25/8.)
+den = np.arange(23.,28.,0.1)
 tol = 0.01
 
 
@@ -239,7 +239,7 @@ zdepth_of_isopycnal = bdy_file.createVariable('Depth of Isopycnal', 'float32', (
 
 
 spiciness[...]           = spic_time_iso[...];
-temperature[...]         = temp_time_iso[...];
+temperature[...]         = tem_time_iso[...];
 salinity[...]            = sal_time_iso[...];
 zdepth_of_isopycnal[...] = depth_rho[...]
 #density[...]   = rho_iso[...];
