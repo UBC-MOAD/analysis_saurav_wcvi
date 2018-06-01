@@ -22,7 +22,7 @@ from dateutil.parser import parse
 from salishsea_tools import geo_tools, viz_tools, tidetools, nc_tools
 import gsw
 
-path_to_save = '/home/ssahu/saurav/'
+path_to_save ='/data/ssahu/NEP36_Extracted_Months/' #'/home/ssahu/saurav/'
 
 
 bathy = nc.Dataset('/data/mdunphy/NEP036-N30-OUT/INV/Bathymetry_EastCoast_NEMO_R036_GEBCO_corr_v14.nc')
@@ -36,8 +36,8 @@ lat = bathy['nav_lat'][...]
 
 z0 = np.ma.masked_values(Z, 0)
 
-y_wcvi_slice = np.array(np.arange(230,350))
-x_wcvi_slice = np.array(np.arange(550,650))
+y_wcvi_slice = np.array(np.arange(180,350))
+x_wcvi_slice = np.array(np.arange(480,650))
 
 def tem_sal_timeseries_at_WCVI_locations(grid_scalar):#, j, i):
 
@@ -87,8 +87,8 @@ rho_jul = np.empty_like(sal_july)
 
 for t in np.arange(sal_july.shape[0]):
     for k in np.arange(sal_july.shape[1]):
-        for j in np.arange(230,350):
-            for i in np.arange(550,650):
+        for j in np.arange(180,350):
+            for i in np.arange(480,650):
                 SA_loc_jul[t,k,j,i] = gsw.SA_from_SP(sal_july[t,k,j,i], pressure_loc[k], lon[j,i], lat[j,i])
                 CT_loc_jul[t,k,j,i] = gsw.CT_from_pt(sal_july[t,k,j,i], temp_july[t,k,j,i])
                 spic_jul[t,k,j,i] = gsw.spiciness0(SA_loc_jul[t,k,j,i],CT_loc_jul[t,k,j,i])
@@ -103,8 +103,8 @@ rho_aug = np.empty_like(sal_aug)
 
 for t in np.arange(sal_aug.shape[0]):
     for k in np.arange(sal_aug.shape[1]):
-        for j in np.arange(230,350):
-            for i in np.arange(550,650):
+        for j in np.arange(180,350):
+            for i in np.arange(480,650):
                 SA_loc_aug[t,k,j,i] = gsw.SA_from_SP(sal_aug[t,k,j,i], pressure_loc[k], lon[j,i], lat[j,i])
                 CT_loc_aug[t,k,j,i] = gsw.CT_from_pt(sal_aug[t,k,j,i], temp_aug[t,k,j,i])
                 spic_aug[t,k,j,i] = gsw.spiciness0(SA_loc_aug[t,k,j,i],CT_loc_aug[t,k,j,i])
@@ -112,7 +112,7 @@ for t in np.arange(sal_aug.shape[0]):
     
 print("Writing the file for July")
 
-bdy_file = nc.Dataset(path_to_save + 'NEP36_T_S_Spice_july.nc', 'w', zlib=True);
+bdy_file = nc.Dataset(path_to_save + 'NEP36_T_S_Spice_july_larger_offshore.nc', 'w', zlib=True);
 
 bdy_file.createDimension('x', sal_july.shape[3]);
 bdy_file.createDimension('y', sal_july.shape[2]);
@@ -153,7 +153,7 @@ print("The July file is successfully written")
 
 print("Writing the file for August")
 
-bdy_file = nc.Dataset(path_to_save + 'NEP36_T_S_Spice_aug.nc', 'w', zlib=True);
+bdy_file = nc.Dataset(path_to_save + 'NEP36_T_S_Spice_aug_larger_offshore.nc', 'w', zlib=True);
 
 bdy_file.createDimension('x', sal_aug.shape[3]);
 bdy_file.createDimension('y', sal_aug.shape[2]);

@@ -36,8 +36,8 @@ lat = bathy['nav_lat'][...]
 
 z0 = np.ma.masked_values(Z, 0)
 
-y_wcvi_slice = np.array(np.arange(230,350))
-x_wcvi_slice = np.array(np.arange(550,650))
+y_wcvi_slice = np.array(np.arange(180,350))
+x_wcvi_slice = np.array(np.arange(480,650))
 
 def tem_sal_timeseries_at_WCVI_locations(grid_scalar):#, j, i):
 
@@ -75,8 +75,8 @@ rho_jun = np.empty_like(sal_june)
 
 for t in np.arange(sal_june.shape[0]):
     for k in np.arange(sal_june.shape[1]):
-        for j in np.arange(230,350):
-            for i in np.arange(550,650):
+        for j in np.arange(180,350):
+            for i in np.arange(480,650):
                 SA_loc_jun[t,k,j,i] = gsw.SA_from_SP(sal_june[t,k,j,i], pressure_loc[k], lon[j,i], lat[j,i])
                 CT_loc_jun[t,k,j,i] = gsw.CT_from_pt(sal_june[t,k,j,i], temp_june[t,k,j,i])
                 spic_jun[t,k,j,i] = gsw.spiciness0(SA_loc_jun[t,k,j,i],CT_loc_jun[t,k,j,i])
@@ -85,7 +85,7 @@ for t in np.arange(sal_june.shape[0]):
     
 print("Writing the file for June")
 
-bdy_file = nc.Dataset(path_to_save + 'NEP36_T_S_Spice_june.nc', 'w', zlib=True);
+bdy_file = nc.Dataset(path_to_save + 'NEP36_T_S_Spice_june_larger_offshore.nc', 'w', zlib=True);
 
 bdy_file.createDimension('x', sal_june.shape[3]);
 bdy_file.createDimension('y', sal_june.shape[2]);
