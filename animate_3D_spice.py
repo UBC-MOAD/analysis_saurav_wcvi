@@ -41,7 +41,7 @@ lon_wcvi  = lon[180:350,480:650]
 lat_wcvi  = lat[180:350,480:650]
 
 
-NEP_aug = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_T_S_Spice_aug_larger_offshore.nc')
+NEP_aug = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_T_S_Spice_aug_larger_offshore_rho_correct.nc')
 
 
 sal_aug = NEP_aug.variables['vosaline']
@@ -52,7 +52,7 @@ rho_aug = NEP_aug.variables['density']
 zlevels = nc.Dataset('/data/mdunphy/NEP036-N30-OUT/CDF_COMB_COMPRESSED/NEP036-N30_IN_20140915_00001440_grid_T.nc').variables['deptht']
 
 
-NEP_jul = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_T_S_Spice_july_larger_offshore.nc')
+NEP_jul = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_T_S_Spice_july_larger_offshore_rho_correct.nc')
 
 
 sal_jul  = NEP_jul.variables['vosaline']
@@ -60,7 +60,7 @@ temp_jul = NEP_jul.variables['votemper']
 spic_jul = NEP_jul.variables['spiciness']
 rho_jul = NEP_jul.variables['density']
 
-NEP_jun = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_T_S_Spice_june_larger_offshore.nc')
+NEP_jun = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_T_S_Spice_june_larger_offshore_rho_correct.nc')
 
 
 sal_jun  = NEP_jun.variables['vosaline']
@@ -74,19 +74,19 @@ rho_jun = NEP_jun.variables['density']
 # spic_iso_jul = NEP_iso_jul.variables['spiciness']
 # iso_t = NEP_iso_jul.variables['isot']
 
-short_NEP_iso_jul = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/short_slice_NEP36_jul_along_isopycnal_larger_offshore.nc')
+short_NEP_iso_jul = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/short_slice_NEP36_jul_along_isopycnal_larger_offshore_rho_correct.nc')
 
 short_spic_iso_jul = short_NEP_iso_jul.variables['spiciness']
 short_iso_t = short_NEP_iso_jul.variables['isot']
 
 
-short_NEP_iso_aug = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/short_NEP36_aug_along_isopycnal_larger_offahore.nc')
+#short_NEP_iso_aug = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/short_NEP36_aug_along_isopycnal_larger_offshore_rho_correct.nc')
 
-short_spic_iso_aug = short_NEP_iso_aug.variables['spiciness']
-short_iso_t = short_NEP_iso_aug.variables['isot']
+#short_spic_iso_aug = short_NEP_iso_aug.variables['spiciness']
+#short_iso_t = short_NEP_iso_aug.variables['isot']
 
 
-short_NEP_iso_jun = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/short_NEP36_june_along_isopycnal_larger_offshore.nc')
+short_NEP_iso_jun = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/short_NEP36_june_along_isopycnal_larger_offshore_rho_correct.nc')
 
 short_spic_iso_jun = short_NEP_iso_jun.variables['spiciness']
 short_iso_t = short_NEP_iso_jun.variables['isot']
@@ -153,7 +153,7 @@ def plot_iso_den(t, rho_0, month):
 
 
 #     norm = mpl.colors.Normalize(vmin=-0.4,vmax=-0.05)
-    norm = mpl.colors.Normalize(vmin=-0.2,vmax=-0.05)
+    norm = mpl.colors.Normalize(vmin=-0.1,vmax=-0.05)
 
 
     plt.rcParams['contour.negative_linestyle'] = 'solid' # default is to have negative contours with dashed lines
@@ -173,7 +173,7 @@ def plot_iso_den(t, rho_0, month):
     ls = LightSource(290, 35)
 #     cmap1 = ls.shade(spic_iso, cmap=cmap, vert_exag=0.8, vmin=-0.4, vmax =-0.15, blend_mode='overlay')
 
-    cmap1 = ls.shade(spic_iso, cmap=cmap, vert_exag=0.8, vmin=-0.2, vmax =-0.05, blend_mode='overlay')
+    cmap1 = ls.shade(spic_iso, cmap=cmap, vert_exag=0.8, vmin=-0.1, vmax =-0.05, blend_mode='overlay')
 
 
 
@@ -196,17 +196,34 @@ def plot_iso_den(t, rho_0, month):
     X, Y = np.meshgrid(x_wcvi_slice[:],y_wcvi_slice[:])
 #     surf = ax.plot_surface(np.flip(Y, axis=0), X, -depth_rho_0[180:350,480:650], facecolors=cmap1,linewidth=0, antialiased=False, rstride=1, cstride=1)
     surf = ax.plot_surface(lon_wcvi, lat_wcvi,-depth_rho_0[180:350,480:650], facecolors=cmap1, linewidth=0, antialiased=False, rstride=1, cstride=1)
-    VecStart_x = lon[264, 599]
-    VecStart_y = lat[264, 599]
-    VecStart_z = 0
-    VecEnd_x = lon[264, 599]
-    VecEnd_y = lat[264, 599]
-    VecEnd_z  =-200
-#     i = 0
-    ax.plot(xs = np.array([VecStart_x, VecEnd_x], dtype=float), ys  = np.array([VecStart_y, VecEnd_y], dtype=float), zs=np.array([VecStart_z, VecEnd_z], dtype=float))
     ax.set_aspect('auto')
-#     ax.view_init(35, 300) # elevation and azimuth
+    
+    lb8_VecStart_x = lon[264, 599]
+    lb8_VecStart_y = lat[264, 599]
+    lb8_VecStart_z = 0
+    lb8_VecEnd_x = lon[264, 599]
+    lb8_VecEnd_y = lat[264, 599]
+    lb8_VecEnd_z  =-150
+    
+    E01_VecStart_x = lon[322, 553]
+    E01_VecStart_y = lat[322, 553]
+    E01_VecStart_z = -13
+    E01_VecEnd_x = lon[322, 553]
+    E01_VecEnd_y = lat[322, 553]
+    E01_VecEnd_z  = -85
+    
+    A1_VecStart_x = lon[269, 572]
+    A1_VecStart_y = lat[269, 572]
+    A1_VecStart_z = -84
+    A1_VecEnd_x = lon[269, 572]
+    A1_VecEnd_y = lat[269, 572]
+    A1_VecEnd_z  = -200
 
+    ax.plot(xs = np.array([lb8_VecStart_x, lb8_VecEnd_x], dtype=float), ys  = np.array([lb8_VecStart_y, lb8_VecEnd_y], dtype=float), zs=np.array([lb8_VecStart_z, lb8_VecEnd_z], dtype=float), label = 'LB08')
+
+    ax.plot(xs = np.array([E01_VecStart_x, E01_VecEnd_x], dtype=float), ys  = np.array([E01_VecStart_y, E01_VecEnd_y], dtype=float), zs=np.array([E01_VecStart_z, E01_VecEnd_z], dtype=float), label = 'E01')
+
+    ax.plot(xs = np.array([A1_VecStart_x, A1_VecEnd_x], dtype=float), ys  = np.array([A1_VecStart_y, A1_VecEnd_y], dtype=float), zs=np.array([A1_VecStart_z, A1_VecEnd_z], dtype=float), label = 'A1')  
     ax.set_ylabel('Latitude', fontsize = 18, labelpad= 18)
     ax.set_xlabel('Longitude', fontsize = 18, labelpad= 18)
     ax.set_zlabel('Depth (m)', fontsize = 18, labelpad= 18)
@@ -214,25 +231,50 @@ def plot_iso_den(t, rho_0, month):
     m = cm.ScalarMappable(cmap=plt.get_cmap(cmo.cm.balance))
     m.set_array(spic_iso)
 #     m.set_clim(-0.4, -0.05)
-    m.set_clim(-0.2, -0.05)
+    m.set_clim(-0.1, -0.05)
     plt.colorbar(m)
     ax.set_aspect('auto')
-
+    ax.legend(loc='best', fancybox=True, framealpha=0.25)
     ax.view_init(35, 240) # elevation and azimuth
-    plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/July_rho_26.8_{0}.png'.format(t))
+
+    if month == 'June':
+
+        plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/rho_26_4_{0}.png'.format(t))
+    
+    if month == 'July':
+
+        plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/rho_26_4_{0}.png'.format(t+30))
+
+    if month == 'August':
+
+        plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/rho_26_4_{0}.png'.format(t+61))
+   
+#    plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/rho_26_4_{0}.png'.format(t+30))
     plt.close()
 
 print("Proceed to compute depths and plot save")
 
 
 # t= 0
-rho_0 = 26.8
+rho_0 = 26.4
 
+#for t in np.arange(30):
+#    print("We are presently computing the iterative step of {0} June".format(t+1))
+#    plot_iso_den(t, rho_0, 'June')
+#
+#for t in np.arange(31):
+#    print("We are presently computing the iterative step of {0} July".format(t+1))
+#    plot_iso_den(t, rho_0, 'July')
+
+
+short_NEP_iso_aug = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/short_NEP36_aug_along_isopycnal_larger_offahore_rho_correct.nc')
+
+short_spic_iso_aug = short_NEP_iso_aug.variables['spiciness']
+short_iso_t = short_NEP_iso_aug.variables['isot']
 
 for t in np.arange(31):
-    print("We are presently computing the iterative step of {0} July".format(t+1))
-    plot_iso_den(t, rho_0, 'July')
-	
+    print("We are presently computing the iterative step of {0} August".format(t+1))
+    plot_iso_den(t, rho_0, 'August')	
 #     ax.set_ylabel('X index')
 #     ax.set_xlabel('Y index')
 #     ax.set_zlabel('Depth (m)')
