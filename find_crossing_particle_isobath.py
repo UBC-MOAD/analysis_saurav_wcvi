@@ -31,13 +31,14 @@ import gsw
 
 import seaborn as sns
 
-
 zlevels = nc.Dataset('/data/mdunphy/NEP036-N30-OUT/CDF_COMB_COMPRESSED/NEP036-N30_IN_20140915_00001440_grid_T.nc').variables['deptht'][:32]
 y_wcvi_slice = np.array(np.arange(180,350))
 x_wcvi_slice = np.array(np.arange(480,650))
 
 
-nc_file = nc.Dataset('/data/ssahu/ARIANE/LB_08/LB_08_big_box.nc')
+#nc_file = nc.Dataset('/data/ssahu/ARIANE/LB_08/LB_08_big_sequential.nc')
+
+nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/isopyncal_263/right_traj_all_down.nc')
 
 
 
@@ -70,6 +71,15 @@ y2=nc_file.variables['final_y'][:]
 
 final_z = nc_file.variables['final_z'][:]
 
+final_age_days = final_age[:]/(3600)
+
+x_final = []
+y_final = []
+
+
+for i in np.arange(x2.shape[0]):
+    x_final = np.append(arr=x_final,values=x_wcvi_slice[np.int(np.rint(x2[i]))-1])
+    y_final = np.append(arr=y_final,values=y_wcvi_slice[np.int(np.rint(y2[i]))-1])
 
 
 
@@ -85,32 +95,30 @@ lat = bathy['nav_lat'][...]
 
 
 cmap=plt.cm.get_cmap('nipy_spectral')
-#     cmap = plt.cm.get_cmap('gist_rainbow')
+
 cmap.set_bad('#8b7765')
 cmin = 0
 cmax = 300
 
 import matplotlib as mpl
-#     norm = mpl.colors.Normalize(vmin=cmin,vmax=cmax)
+
 
 fig, ax = plt.subplots(1, 1, figsize=(16,12)); ax.grid()
 CS = ax.contour(x_wcvi_slice,y_wcvi_slice,Z[y_wcvi_slice,x_wcvi_slice], np.arange(200,210,10))
 
-vert = CS.collections[0].get_paths()[0].vertices
 
-x_200_wcvi = vert[:,0]
-y_200_wcvi = vert[:,1]
 
 ax.set_xlabel('x index', fontsize =16)
 ax.set_ylabel('y index', fontsize = 16)
 ax.tick_params(axis='both',labelsize =16)
+
 
 ax.legend(loc = 'best')
 
 viz_tools.plot_land_mask(ax, bathy, yslice=y_wcvi_slice, xslice=x_wcvi_slice, color='burlywood')
 viz_tools.plot_coastline(ax, bathy, yslice=y_wcvi_slice, xslice=x_wcvi_slice, color='brown')
 
-x = [520,575]
+x = [510,575]
 y = [320,200]
 ax.plot(x, y , 'bo-')
 
@@ -151,44 +159,73 @@ j, i = geo_tools.find_closest_model_point(lon_LB08,lat_LB08,\
 ax.scatter(i,j, marker = 'o', c = 'red', s = 300, linewidths=100, label = 'Eddy region')
 
 ax.hlines(y = 200, xmin = 575, xmax=645, color = 'b')
-ax.hlines(y = 320, xmin = 520, xmax=590, color = 'b')
+ax.hlines(y = 320, xmin = 510, xmax=590, color = 'b')
 ax.grid()
 
+contour = CS.collections[0]
+vs = contour.get_paths()[0].vertices
 
-# for i in range(0, len(x_200_wcvi), 10):
-#     plt.plot(x_200_wcvi[i:i+1], y_200_wcvi[i:i+1], 'mo-')
-    
+
+vert = CS.collections[0].get_paths()[0].vertices
+
+x_200_wcvi = vert[:,0]
+y_200_wcvi = vert[:,1]
+
+
 
 Line = ax.plot(x_200_wcvi[::10], y_200_wcvi[::10], 'go-')
 fig.tight_layout()
 
-plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/200m_isobath.png')
 plt.close()
 
-indice = np.empty_like(traj_lon)
+#cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_savedcross_index.npy')
+#time_index  = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index.npy')
+
+cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_all_down.npy')
+
+time_index  = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_all_down.npy')
 
 
-for k in np.arange(traj_lon.shape[0]-1):
-        for m in np.arange(traj_lon.shape[1]):
-            y, x = geo_tools.find_closest_model_point(traj_lon[k,m],traj_lat[k,m],\
-                                          lon,lat,grid='NEMO',tols=\
-                                          {'NEMO': {'tol_lon': 0.1, 'tol_lat': 0.1},\
-                                           'GEM2.5': {'tol_lon': 0.1, 'tol_lat': 0.1}})
-            y1,x1 = geo_tools.find_closest_model_point(traj_lon[k+1,m],traj_lat[k+1,m],\
-                                          lon,lat,grid='NEMO',tols=\
-                                          {'NEMO': {'tol_lon': 0.1, 'tol_lat': 0.1},\
-                                           'GEM2.5': {'tol_lon': 0.1, 'tol_lat': 0.1}})
+y_200_loc = np.empty_like(cross_index)
+x_200_loc = np.empty_like(cross_index)
 
-            bbox = mpl.transforms.Bbox(points=[(x,y), (x1,y1)]) 
-
-            if mpl.path.Path(vertices=vert).intersects_bbox(bbox, filled=True) == True:
-
-                indice[k,m] = m
+for m in np.arange(cross_index.shape[0]):
+    
+    for k in np.arange(1,traj_lon.shape[0]-1):
 
 
-            else:
-                continue
-                
-np.save(particle_crosses, indice)
+        y, x = geo_tools.find_closest_model_point(traj_lon[k,cross_index[m].astype(int)],\
+                                              traj_lat[k,cross_index[m].astype(int)],\
+                                  lon,lat,grid='NEMO',tols=\
+                                  {'NEMO': {'tol_lon': 0.1, 'tol_lat': 0.1},\
+                                   'GEM2.5': {'tol_lon': 0.1, 'tol_lat': 0.1}})
+        y1,x1 = geo_tools.find_closest_model_point(traj_lon[k+1,cross_index[m].astype(int)],\
+                                                   traj_lat[k+1,cross_index[m].astype(int)],\
+                                      lon,lat,grid='NEMO',tols=\
+                                      {'NEMO': {'tol_lon': 0.1, 'tol_lat': 0.1},\
+                                       'GEM2.5': {'tol_lon': 0.1, 'tol_lat': 0.1}})
+
+        bbox = mpl.transforms.Bbox(points=[(x,y), (x1,y1)]) 
+
+        PATH = mpl.path.Path(vertices =[(x,y), (x1,y1)] )
+
+        #         if (mpl.path.Path(vertices=vert).intersects_bbox(bbox, filled=True)) == True:
+
+        if (mpl.path.Path(vertices=vert).intersects_path(PATH, filled=True)) == True:
+
+            y_200_loc[m], x_200_loc[m] = y,x
+            
+            print(m)
+
+            break
+            
+#np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/x_200_total.npy', arr=x_200_loc)
+#np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/y_200_total.npy', arr=y_200_loc)
+
+np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/x_200_total_all_down.npy', arr=x_200_loc)
+np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/y_200_total_all_down.npy', arr=y_200_loc)
+
+
+
 
 
