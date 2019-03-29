@@ -38,9 +38,9 @@ x_wcvi_slice = np.array(np.arange(480,650))
 
 #nc_file = nc.Dataset('/data/ssahu/ARIANE/LB_08/LB_08_big_sequential.nc')
 
-nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/isopyncal_263/right_traj_all_down.nc')
+#nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/isopyncal_263/right_traj_all_down.nc')
 
-
+nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/isopyncal_263/right_traj_all_down_high_spice.nc')
 
 init_x = nc_file.variables['init_x']
 init_z = nc_file.variables['init_z']
@@ -181,10 +181,13 @@ plt.close()
 #cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_savedcross_index.npy')
 #time_index  = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index.npy')
 
-cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_all_down.npy')
+#cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_all_down.npy')
 
-time_index  = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_all_down.npy')
+#time_index  = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_all_down.npy')
 
+cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_all_down_high_spice.npy')
+
+time_index  = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_all_down_high_spice.npy')
 
 y_200_loc = np.empty_like(cross_index)
 x_200_loc = np.empty_like(cross_index)
@@ -222,8 +225,8 @@ for m in np.arange(cross_index.shape[0]):
 #np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/x_200_total.npy', arr=x_200_loc)
 #np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/y_200_total.npy', arr=y_200_loc)
 
-np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/x_200_total_all_down.npy', arr=x_200_loc)
-np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/y_200_total_all_down.npy', arr=y_200_loc)
+np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/x_200_total_all_down_high_spice.npy', arr=x_200_loc)
+np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/y_200_total_all_down_high_spice.npy', arr=y_200_loc)
 
 
 
