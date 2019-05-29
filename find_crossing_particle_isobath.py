@@ -44,7 +44,12 @@ x_wcvi_slice = np.array(np.arange(480,650))
 
 #nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/accurate_isopyncal_particle_positions/eddy_water.nc')
 
-nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/accurate_isopyncal_particle_positions/south_outer_shelf_water.nc')
+#nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/accurate_isopyncal_particle_positions/south_outer_shelf_water.nc')
+
+#nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/accurate_isopycnals_eddy_water_particles_two_months_more.nc')
+
+nc_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/\
+accurate_isopycnals_south_outer_shelf__water_particles_two_months_more.nc')
 
 init_x = nc_file.variables['init_x']
 init_z = nc_file.variables['init_z']
@@ -197,9 +202,18 @@ plt.close()
 
 #time_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_accurate_iso_low.npy')
 
-cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_accurate_iso_high.npy')
+#cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_accurate_iso_high.npy')
 
-time_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_accurate_iso_high.npy')
+#time_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_accurate_iso_high.npy')
+
+
+#cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_accurate_iso_low_two_more_months.npy')
+
+#time_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_accurate_iso_low_two_more_months.npy')
+
+cross_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/cross_index_accurate_iso_high_two_more_months.npy')
+
+time_index = np.load(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/time_index_accurate_iso_high_two_more_months.npy')
 
 y_200_loc = np.empty_like(cross_index)
 x_200_loc = np.empty_like(cross_index)
@@ -245,8 +259,14 @@ for m in np.arange(cross_index.shape[0]):
 
 #np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/y_200_total_eddy_water_acc_iso.npy', arr=y_200_loc)
 
-np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/x_200_south_outer_shelf_water_acc_iso.npy', arr=x_200_loc)
+#np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/x_200_south_outer_shelf_water_acc_iso.npy', arr=x_200_loc)
 
-np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/y_200_south_outer_shelf_water_acc_iso.npy', arr=y_200_loc)
+#np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/y_200_south_outer_shelf_water_acc_iso.npy', arr=y_200_loc)
 
+#np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/x_200_total_eddy_water_acc_iso_two_more_months.npy', arr=x_200_loc)
 
+#np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/y_200_total_eddy_water_acc_iso_iso_two_more_months.npy', arr=y_200_loc)
+
+np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/x_200_south_outer_shelf_water_acc_iso_two_more_months.npy', arr=x_200_loc)
+
+np.save(file='/data/ssahu/NEP36_2013_summer_hindcast/Ariane_files/numpy_arrays_saved/y_200_south_outer_shelf_water_acc_iso_two_more_months.npy', arr=y_200_loc)
