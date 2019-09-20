@@ -48,17 +48,31 @@ def tem_sal_timeseries_at_WCVI_locations(grid_scalar):#, j, i):
 
     return scalar_ts(temp, sal)
 
-temp = np.empty((180,32,y_wcvi_slice.shape[0],x_wcvi_slice.shape[0]))
-sal = np.empty((180,32,y_wcvi_slice.shape[0],x_wcvi_slice.shape[0]))
+temp = np.empty((240,32,y_wcvi_slice.shape[0],x_wcvi_slice.shape[0]))
+sal = np.empty((240,32,y_wcvi_slice.shape[0],x_wcvi_slice.shape[0]))
 
+print("Reading in the spring files")
 
 i = 0
+
+for file in sorted(glob.glob('/data/ssahu/NEP36_2013_summer_hindcast/two_months_more_tracers_fields_for_spice/cut_NEP36-S30_1d_20130228_20130429_grid_T_*.nc')):
+
+    scalar_ts = tem_sal_timeseries_at_WCVI_locations(nc.Dataset(file))
+    temp[i:i+10,...] = scalar_ts[0]
+    sal[i:i+10,...] = scalar_ts[1]
+    i = i+10
+    print(i)
+    
+print("Now reading the summer files")
+
 for file in sorted(glob.glob('/data/ssahu/NEP36_2013_summer_hindcast/cut_NEP36-S29_1d_*_grid_T_*.nc')):
 
     scalar_ts = tem_sal_timeseries_at_WCVI_locations(nc.Dataset(file))
     temp[i:i+10,...] = scalar_ts[0]
     sal[i:i+10,...] = scalar_ts[1]
     i = i+10
+    print(i)
+    
 
 T_2013_file = nc.Dataset('/data/ssahu/NEP36_2013_summer_hindcast/cut_NEP36-S29_1d_20130429_20131025_grid_T_20130429-20130508.nc')
     
@@ -72,10 +86,14 @@ lon = T_2013_file.variables['nav_lon'][1:,1:]
 
 pressure_loc = gsw.p_from_z(-zlevels[:],np.mean(lat))
 
+print("Files read successfully, now extracting spice and density from gsw calls")
+
 for t in np.arange(sal.shape[0]):
+    print(t)
     for k in np.arange(sal.shape[1]):
         for j in np.arange(sal.shape[2]):
             for i in np.arange(sal.shape[3]):
+#                print(t)
                 SA_loc[t,k,j,i] = gsw.SA_from_SP(sal[t,k,j,i], pressure_loc[k], lon[j,i], lat[j,i])
                 CT_loc[t,k,j,i] = gsw.CT_from_pt(sal[t,k,j,i], temp[t,k,j,i])
                 spic[t,k,j,i] = gsw.spiciness0(SA_loc[t,k,j,i],CT_loc[t,k,j,i])
@@ -85,7 +103,7 @@ for t in np.arange(sal.shape[0]):
     
 print("Beginning to write the output file")
 
-bdy_file = nc.Dataset(path_to_save + 'NEP36_2013_T_S_Spice_larger_offshore_rho_correct.nc', 'w', zlib=True);
+bdy_file = nc.Dataset(path_to_save + 'NEP36_2013_T_S_Spice_larger_offshore_rho_correct_including_spring_parallel.nc', 'w', zlib=True);
 
 bdy_file.createDimension('x', sal.shape[3]);
 bdy_file.createDimension('y', sal.shape[2]);
