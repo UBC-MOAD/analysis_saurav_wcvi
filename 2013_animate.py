@@ -1512,8 +1512,22 @@ lon_wcvi  = lon[180:350,480:650]
 lat_wcvi  = lat[180:350,480:650]
 
 
-NEP = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_2013_T_S_Spice_larger_offshore_rho_correct.nc')
+#NEP = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_2013_T_S_Spice_larger_offshore_rho_correct.nc')
+#
+#
+#sal = NEP.variables['vosaline']
+#temp = NEP.variables['votemper']
+#spic = NEP.variables['spiciness']
+#rho = NEP.variables['density']
+#
+#
+#short_NEP_iso = nc.Dataset('/data/ssahu/NEP36_Extracted_Months#/2013_short_slice_NEP36_along_isopycnal_larger_offshore_rho_correct.nc')
+#
+#short_spic_iso = short_NEP_iso.variables['spiciness']
+#short_iso_t = short_NEP_iso.variables['isot']
 
+NEP = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/NEP36_2013_T_S_Spice_larger_offshore_rho_correct_\
+including_spring_parallel.nc')
 
 sal = NEP.variables['vosaline']
 temp = NEP.variables['votemper']
@@ -1521,14 +1535,15 @@ spic = NEP.variables['spiciness']
 rho = NEP.variables['density']
 
 
-short_NEP_iso = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/2013_short_slice_NEP36_along_isopycnal_larger_offshore_rho_correct.nc')
-
+short_NEP_iso = nc.Dataset('/data/ssahu/NEP36_Extracted_Months/2013_NEP36_along_isopycnal_\
+larger_offshore_rho_correct_including_spring.nc')
 short_spic_iso = short_NEP_iso.variables['spiciness']
 short_iso_t = short_NEP_iso.variables['isot']
 
 sns.set_context('talk')
 
-def plot_iso_den(t, rho_0):
+
+def plot_iso_den(t1, rho_0):
     
     depth_rho_0 = np.zeros_like(sal[0,0,...])
 
@@ -1537,12 +1552,12 @@ def plot_iso_den(t, rho_0):
     for j in np.arange(y_wcvi_slice.shape[0]):
         for i in np.arange(x_wcvi_slice.shape[0]):
             if mbathy[j,i] > 0:
-                depth_rho_0[j, i] = np.interp(rho_0, rho[t,:mbathy[j, i], j, i]-1000, zlevels[:mbathy[j, i]])
+                depth_rho_0[j, i] = np.interp(rho_0, rho[t1,:mbathy[j, i], j, i]-1000, zlevels[:mbathy[j, i]])
 
 
     k = np.where(short_iso_t[:] == rho_0)
 
-    spic_tzyx = short_spic_iso[t,k[0],...]
+    spic_tzyx = short_spic_iso[t1,k[0],...]
     spic_tzyx[np.isnan(spic_tzyx)] = 0
     spic_iso = np.ma.masked_equal(spic_tzyx[0,...], 0)
         
@@ -1590,7 +1605,7 @@ def plot_iso_den(t, rho_0):
     # ax2.plot(mydates_Newport_1, wind_stress_newport[58:243], c = colors[30], linewidth=2, label = 'Newport')
 
 
-    ax2.set_ylabel('Alongshore Wind Stress ($\mathrm{N/m^2}$)', fontsize = 16)
+    ax2.set_ylabel('Alongshore Wind Stress ($\mathrm{Nm^{-2}}$)', fontsize = 16)
     ax2.set_ylim(-0.15, 0.15)
     ax2.tick_params(axis='both',labelsize =16, color = colors[25])
     ax2.yaxis.label.set_color(colors[25])
@@ -1598,8 +1613,8 @@ def plot_iso_den(t, rho_0):
     ax2.spines['left'].set_color(colors_speed[25])
     # ax2.axhline(y=0, color = 'k')
     ax2.axvline(x = mydates_Newport[mydates_Newport == '2013-08-21'], color = 'r', linestyle  = '--')
-    if (t < 125):
-        ax2.axvline(x = mydates_Newport[t+60], color = 'g', linestyle  = '--')
+#     if (t1 < 125):
+    ax2.axvline(x = mydates_Newport[t1], color = 'g', linestyle  = ':',linewidth=3)
     ax2.axvline(x = mydates_Newport[-1], color = 'r', linestyle  = '--')
 
 #     fig.autofmt_xdate()
@@ -1610,7 +1625,7 @@ def plot_iso_den(t, rho_0):
     ax1.plot(mydates_A1_1, streng, color = colors_speed[20], linewidth=1.5, linestyle = 'dashed', label = 'ADCP at A1')
     ax1.plot(mydates_A1_model, streng_model, color = colors_speed[20], linewidth=2, label = 'NEP36 at A1')
 
-    ax1.set_ylabel('Undercurrent Transport ($\mathrm{m^2/s}$)', fontsize = 16)
+    ax1.set_ylabel('Undercurrent Transport ($\mathrm{m^{2}s^{-1}}$)', fontsize = 16)
     ax1.set_ylim(-2, 63)
     ax1.tick_params(axis='both',labelsize =16, color = colors_speed[25])
     ax1.yaxis.label.set_color(colors_speed[25])
@@ -1622,33 +1637,33 @@ def plot_iso_den(t, rho_0):
 #     ax = fig.gca(projection='3d')
     ax = fig.add_subplot(212, projection='3d')
     
-    if t <= 1:
-        month = 'April'
-        ax.set_title('Spiciness on {0} April 2013, at isopycnal level of \u2248 {d:.2f} '.format(t+29, d=rho_0))
+    if t1 < 1:
+        month = 'February'
+        ax.set_title('Spice on {0} February 2013, at $\sigma_t$ \u2248 {d:.2f} '.format(t1+28, d=rho_0))
             
-    if 1 < t <=32:
+    if 1 <= t1 <32:
+        month = 'March'
+        ax.set_title('Spice on {0} March 2013, at $\sigma_t$ \u2248 {d:.2f} '.format(t1, d=rho_0))
+        
+    if 32 <= t1 < 62:
+        month = 'April'
+        ax.set_title('Spice on {0} April 2013, at $\sigma_t$ \u2248 {d:.2f} '.format(t1-31, d=rho_0))
+        
+    if 62 <= t1 < 93:
         month = 'May'
-        ax.set_title('Spiciness on {0} May 2013, at isopycnal level of \u2248 {d:.2f} '.format(t-1, d=rho_0))
+        ax.set_title('Spice on {0} May 2013, at $\sigma_t$ \u2248 {d:.2f} '.format(t1-61, d=rho_0))
         
-    if 32 < t <= 62:
+    if 93 <= t1 < 123:
         month = 'June'
-        ax.set_title('Spiciness on {0} June 2013, at isopycnal level of \u2248 {d:.2f} '.format(t-32, d=rho_0))
+        ax.set_title('Spice on {0} June 2013, at $\sigma_t$ \u2248 {d:.2f} '.format(t1-92, d=rho_0))
         
-    if 62 < t <= 93:
+    if 123 <= t1 < 154:
         month = 'July'
-        ax.set_title('Spiciness on {0} July 2013, at isopycnal level of \u2248 {d:.2f} '.format(t-62, d=rho_0))
-        
-    if 83 < t <= 124:
-        month = 'August'
-        ax.set_title('Spiciness on {0} August 2013, at isopycnal level of \u2248 {d:.2f} '.format(t-83, d=rho_0))
-        
-    if 114 < t <= 154:
-        month = 'September'
-        ax.set_title('Spiciness on {0} September 2013, at isopycnal level of \u2248 {d:.2f} '.format(t-114, d=rho_0))
+        ax.set_title('Spice on {0} July 2013, at $\sigma_t$ \u2248 {d:.2f} '.format(t1-122, d=rho_0))
     
-    if 154 < t <= 185:
-        month = 'October'
-        ax.set_title('Spiciness on {0} October 2013, at isopycnal level of \u2248 {d:.2f} '.format(t-154, d=rho_0))
+    if 154 <= t1 < 185:
+        month = 'August'
+        ax.set_title('Spice on {0} August 2013, at $\sigma_t$ \u2248 {d:.2f} '.format(t1-153, d=rho_0))
     
     X, Y = np.meshgrid(x_wcvi_slice[:],y_wcvi_slice[:])
     #     surf = ax.plot_surface(np.flip(Y, axis=0), X, -depth_rho_0[180:350,480:650], facecolors=cmap1,linewidth=0, antialiased=False, rstride=1, cstride=1)
@@ -1695,18 +1710,20 @@ def plot_iso_den(t, rho_0):
     ax.view_init(40, 240) # elevation and azimuth
     
     fig.tight_layout()
+    
             
-    plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/2013_rho_26_4_{0}.png'.format(t))
+    #plt.savefig('/home/ssahu/saurav/3D_images_for_video_spice/2013_rho_26_4_{0}.png'.format(t))
+    plt.savefig('/data/ssahu/Supplementary_material/cropped_images_264_proper_names/rho_26_5_{:04d}.png'.format(t1+1))
     plt.close()
 
 
-rho_0 = 26.4
+rho_0 = 26.5
 
 print("Plotting Begins")
 
-for t in np.arange(rho.shape[0]):
-    print (t)
-    plot_iso_den(t, rho_0)
+for t1 in np.arange(mydates_A1_model.shape[0]):
+    print (t1)
+    plot_iso_den(t1, rho_0)
     
 print("The code has run to completion, thanks for waiting")
     
